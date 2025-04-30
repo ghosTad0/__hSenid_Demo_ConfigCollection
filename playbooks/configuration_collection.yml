@@ -1,0 +1,26 @@
+---
+- name: Collecting host details to a file
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Remove the existing host details file (Optional)
+      file: 
+        path: "/home/__aap_details/host_details.txt"
+        state: absent # This will remove the file if it exists
+
+    - name: Set custom facts for cpu_cores, memory, and flavour (Optional)
+      set_fact:
+        cpu_cores: "{{ ansible_processor_cores }}"
+        memory: "{{ ansible_memtotal_mb }}"
+        flavour: "Standard" # Example, you can change it to whatever value you need
+
+    - name: Append host details to file
+      lineinfile:
+        path: "/home/__aap_details/host_details.txt" # Path to the file where you want to store the details
+        line: |
+          host: {{ ansible_host }}
+            cpu_cores: {{ cpu_cores }}
+            memory: {{ memory }}mb
+            flavour: {{ flavour }}
+        create: yes # If the file doesn't exist, create it
+        insertafter: EOF # Append to the end of the file
