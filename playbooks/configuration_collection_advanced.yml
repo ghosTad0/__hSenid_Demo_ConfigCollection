@@ -1,0 +1,45 @@
+---
+- name: Collect host details and append to the first host's file
+  hosts: all
+  vars_files:
+    - ../vars/var_set.yml
+  gather_facts: true
+  tasks:
+    - name: Remove the existing host details file (Optional)
+      file:
+        path: "{{ config_file_path }}"
+        state: absent # This will remove the file if it exists
+
+    - name: Set custom facts for cpu_cores, memory, and flavour (Optional)
+      set_fact:
+        flavour: "{{ ansible_os_family }}" # Example, you can change it to whatever value you need
+        cpu_cores: "{{ ansible_processor_vcpus }}"
+        memory: "{{ ansible_memtotal_mb }}"
+        processor: "{{ ansible_processor }}"
+
+    - name: Collect host details into a variable (JSON format)
+      set_fact:
+        host_details: |
+          host: {{ ansible_host }}
+            flavour: {{ flavour }}
+            cpu_cores: {{ cpu_cores }}
+            memory: {{ memory }}mb
+            processor: {{ processor[-1] }}
+      run_once: true # Only do this on the first host to avoid multiple sets
+
+- name: Append collected host details to the first host's file
+  hosts: all
+  tasks:
+    - name: Remove the existing host details file (Optional)
+      file:
+        path: "{{ config_file_path }}"
+        state: absent # This will remove the file if it exists
+
+    - name: Append host details to the file on the first host
+      lineinfile:
+        path: "{{ config_file_path }}"
+        line: "{{ host_details }}"
+        create: yes
+        insertafter: EOF
+      delegate_to: "{{ groups['all'][0] }}" # Delegate the task to the first host in the inventory
+      run_once: true # Only do this task once on the first host

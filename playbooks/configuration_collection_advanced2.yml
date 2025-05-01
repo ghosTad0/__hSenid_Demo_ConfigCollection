@@ -1,0 +1,32 @@
+---
+- name: Gather and collect host details
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Collect host details
+      set_fact:
+        host_info: |
+          host: {{ inventory_hostname }}
+            flavour: {{ ansible_os_family }}
+            cpu_cores: {{ ansible_processor_vcpus }}
+            memory: {{ ansible_memtotal_mb }}mb
+            processor: {{ ansible_processor[-1] }}
+      register: collected_info
+      delegate_facts: true
+
+- name: Write all host details to file on host1
+  hosts: host1
+  gather_facts: false
+  tasks:
+    - name: Remove the existing host details file (optional)
+      file:
+        path: "/home/__aap_details/host_details.txt"
+        state: absent
+
+    - name: Create host details file with all hosts’ info
+      copy:
+        dest: "/home/__aap_details/host_details.txt"
+        content: |
+          {% for host in groups['all'] %}
+          {{ hostvars[host].host_info }}
+          {% endfor %}
