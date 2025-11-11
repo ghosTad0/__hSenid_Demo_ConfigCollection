@@ -1,2 +1,3 @@
 ---
 config_file_path: /home/__aap_details/host_details.txt
+config_dir_path: /home/__aap_details
