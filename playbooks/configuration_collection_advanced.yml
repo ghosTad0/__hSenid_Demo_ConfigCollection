@@ -1,5 +1,5 @@
 ---
-- name: Collect host details and append to the first host's file
+- name: Collect host details and append to the first host's file   #DOES NOT WORK, ALL HOST DETAILS ARE NOT RECORDED IN FIRST HOST.
   hosts: all
   vars_files:
     - ../vars/var_set.yml
