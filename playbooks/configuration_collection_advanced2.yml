@@ -19,6 +19,7 @@
 - name: Write all host details to file on host1
   hosts: host1
   gather_facts: false
+  become: yes
   tasks:
     - name: Remove the existing host details file (optional)
       file:
