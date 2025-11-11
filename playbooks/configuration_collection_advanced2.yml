@@ -2,8 +2,6 @@
 - name: Gather and collect host details
   hosts: all
   gather_facts: true
-  vars_files:
-    - ../vars/var_set1.yml
   tasks:
     - name: Collect host details
       set_fact:
@@ -20,6 +18,8 @@
   hosts: host1
   gather_facts: false
   become: yes
+  vars_files:
+    - ../vars/var_set1.yml
   tasks:
     - name: Remove the existing host details file (optional)
       file:
