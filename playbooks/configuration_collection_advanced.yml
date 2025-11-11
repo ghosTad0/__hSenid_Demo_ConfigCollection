@@ -36,6 +36,7 @@
         state: absent # This will remove the file if it exists
 
     - name: Append host details to the file on the first host
+      become: yes
       lineinfile:
         path: "{{ config_file_path }}"
         line: "{{ host_details }}"
