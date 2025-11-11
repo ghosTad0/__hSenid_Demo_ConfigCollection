@@ -23,6 +23,12 @@
         path: "/home/__aap_details/host_details.txt"
         state: absent
 
+    - name: Ensure destination directory exists
+      file:
+        path: "/home/__aap_details"
+        state: directory
+        mode: '0755'
+
     - name: Create host details file with all hosts’ info
       copy:
         dest: "/home/__aap_details/host_details.txt"
