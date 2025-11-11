@@ -1,5 +1,5 @@
 ---
-- name: Collecting host details to a file
+- name: Collecting host details to a file  #DONT USE THIS, SINCE IT'S TOO PRIMARY
   hosts: all
   gather_facts: true
   tasks:
