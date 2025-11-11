@@ -22,18 +22,18 @@
   tasks:
     - name: Remove the existing host details file (optional)
       file:
-        path: {{ config_file_path }}
+        path: "{{ config_file_path }}"
         state: absent
 
     - name: Ensure destination directory exists
       file:
-        path: {{ config_dir_path }}
+        path: "{{ config_dir_path }}"
         state: directory
         mode: '0755'
 
     - name: Create host details file with all hosts’ info
       copy:
-        dest: {{ config_file_path }}
+        dest: "{{ config_file_path }}"
         content: |
           {% for host in groups['all'] %}
           {{ hostvars[host].host_info }}
